@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "com.mongodb.WriteConcern",
+      "type": "java.lang.String",
+      "description": "Description for com.mongodb.WriteConcern."
+    }
+  ]
+}
