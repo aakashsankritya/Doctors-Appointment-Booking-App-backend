@@ -1,7 +1,6 @@
 package com.medizine.backend.repositoryservices;
 
 import com.medizine.backend.dto.Doctor;
-import com.medizine.backend.models.DoctorEntity;
 import com.medizine.backend.repositories.DoctorRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
     List<Doctor> doctorList = new ArrayList<>();
     ModelMapper modelMapper = modelMapperProvider.get();
 
-    List<DoctorEntity> doctorEntityList = doctorRepository.findAll();
-    for (DoctorEntity doctorEntity : doctorEntityList) {
+    List<Doctor> doctorEntityList = doctorRepository.findAll();
+    for (Doctor doctorEntity : doctorEntityList) {
       doctorList.add(modelMapper.map(doctorEntity, Doctor.class));
     }
     return doctorList;

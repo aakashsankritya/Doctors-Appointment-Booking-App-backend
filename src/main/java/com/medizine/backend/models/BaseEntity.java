@@ -15,9 +15,6 @@ public abstract class BaseEntity implements Cloneable {
   @Id
   private ObjectId id;
 
-//  @JsonIgnore
-//  private StatusType status;
-
   private Date createdDate;
 
   @JsonIgnore
