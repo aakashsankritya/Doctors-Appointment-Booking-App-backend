@@ -4,6 +4,11 @@
       "name": "com.mongodb.WriteConcern",
       "type": "java.lang.String",
       "description": "Description for com.mongodb.WriteConcern."
+    },
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "description": "Description for file.upload-dir."
     }
   ]
 }

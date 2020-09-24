@@ -33,10 +33,20 @@ public class UserService implements BaseService {
   }
 
   public BaseResponse<?> getAllUser() {
-    return userRepositoryService.getAll();
+    List<User> userList = userRepositoryService.getAll();
+    if (userList != null) {
+      return new BaseResponse<>(userList, "OK");
+    } else {
+      return new BaseResponse<>(null, "NOT FOUND");
+    }
   }
 
   public BaseResponse<?> findUserById(String id) {
     return userRepositoryService.getUserById(id);
+  }
+
+  public BaseResponse<?> updateById(String id, User userToUpdate) {
+    return userRepositoryService.updateUserById(id, userToUpdate);
+
   }
 }

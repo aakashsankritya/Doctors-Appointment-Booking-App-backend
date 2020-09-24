@@ -1,9 +1,7 @@
 package com.medizine.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 
 
 @Data
@@ -11,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseClass {
 
