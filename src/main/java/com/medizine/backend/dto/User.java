@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-
 @Data
 @Builder
 @Document(collection = "users")
@@ -42,4 +41,6 @@ public class User extends BaseEntity {
   private int weight;
 
   private String[] problems;
+
+  private Status status;
 }

@@ -1,5 +1,5 @@
 package com.medizine.backend.dto;
 
-enum STATUS {
+public enum Status {
   ACTIVE, INACTIVE
 }

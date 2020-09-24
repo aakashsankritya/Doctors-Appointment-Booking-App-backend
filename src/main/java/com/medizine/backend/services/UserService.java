@@ -56,4 +56,12 @@ public class UserService implements BaseService {
   public ResponseEntity<?> patchUserById(String id, UserPatchRequest changes) {
     return userRepositoryService.patchUser(id, changes);
   }
+
+  public BaseResponse<?> deleteUser(String id) {
+    return userRepositoryService.deleteUserById(id);
+  }
+
+  public BaseResponse<?> restoreUser(String id) {
+    return userRepositoryService.restoreUserById(id);
+  }
 }

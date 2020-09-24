@@ -4,6 +4,7 @@ import com.medizine.backend.exchanges.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 abstract class ApiCrudController {
@@ -17,6 +18,6 @@ abstract class ApiCrudController {
   @DeleteMapping("/deleteById")
   public abstract BaseResponse<?> deleteById(String id);
 
-  @GetMapping("/restoreById/")
+  @PutMapping("/restoreById")
   public abstract BaseResponse<?> restoreById(String id);
 }
