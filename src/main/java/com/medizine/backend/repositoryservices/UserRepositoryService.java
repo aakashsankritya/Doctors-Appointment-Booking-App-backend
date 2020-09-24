@@ -18,4 +18,8 @@ public interface UserRepositoryService {
   BaseResponse<?> updateUserById(String id, User userToUpdate);
 
   ResponseEntity<?> patchUser(String id, UserPatchRequest changes);
+
+  BaseResponse<?> deleteUserById(String id);
+
+  BaseResponse<?> restoreUserById(String id);
 }

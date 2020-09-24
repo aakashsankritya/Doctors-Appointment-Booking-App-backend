@@ -8,11 +8,13 @@ import com.medizine.backend.services.BaseService;
 import com.medizine.backend.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @Validated
@@ -86,22 +88,20 @@ public class UserController extends ApiCrudController {
   @PutMapping("/updateById")
   public BaseResponse<?> updateById(String id, @Valid @RequestBody User userToUpdate) {
     BaseResponse<?> baseResponse = userService.updateById(id, userToUpdate);
-
-    if (baseResponse == null || baseResponse.getData() == null) {
-      return new BaseResponse<>(null, "Error");
-    } else {
-      return baseResponse;
-    }
+    return Objects.requireNonNullElseGet(baseResponse,
+        () -> new BaseResponse<>(ResponseEntity.badRequest().body(HttpStatus.NOT_FOUND), "Error"));
   }
 
 
   @Override
   public BaseResponse<?> deleteById(String id) {
-    return null;
+    return userService.deleteUser(id);
   }
 
   @Override
   public BaseResponse<?> restoreById(String id) {
-    return null;
+    BaseResponse<?> response = userService.restoreUser(id);
+    return response != null ?
+        response : new BaseResponse<>(ResponseEntity.badRequest(), "Bad Request");
   }
 }
