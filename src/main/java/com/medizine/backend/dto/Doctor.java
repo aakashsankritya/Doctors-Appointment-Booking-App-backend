@@ -17,4 +17,5 @@ public class Doctor extends BaseClass {
   private String speciality;
   private String[] language;
   private String location;
+
 }

@@ -23,6 +23,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	implementation group: "javax.inject", name: "javax.inject", version: "1"
 	implementation group: "com.google.guava", name: "guava", version: "20.0"
