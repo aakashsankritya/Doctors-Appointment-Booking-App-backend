@@ -24,11 +24,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation('org.springframework.boot:spring-boot-starter-validation')
 
 	implementation group: "javax.inject", name: "javax.inject", version: "1"
 	implementation group: "com.google.guava", name: "guava", version: "20.0"
 
-	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+	compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
 
 	compileOnly 'org.projectlombok:lombok'
