@@ -3,6 +3,7 @@ package com.medizine.backend.controller;
 import com.medizine.backend.dto.User;
 import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.GetUserResponse;
+import com.medizine.backend.exchanges.PatchRequest;
 import com.medizine.backend.services.BaseService;
 import com.medizine.backend.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -11,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
+@Validated
 @RequestMapping(UserController.BASE_API_ENDPOINT)
 @Log4j2
 public class UserController extends ApiCrudController {
@@ -20,7 +24,8 @@ public class UserController extends ApiCrudController {
   public static final String GET_DOCTORS = "/getDoctors";
 
   @Autowired
-  UserService userService;
+  private UserService userService;
+
   @Autowired
   private BaseService baseService;
 
@@ -37,8 +42,8 @@ public class UserController extends ApiCrudController {
   }
 
 
-  @PutMapping("/create")
-  public ResponseEntity<?> create(@Validated @RequestBody User newUser) {
+  @PostMapping("/create")
+  public ResponseEntity<?> create(@Valid @RequestBody User newUser) {
     log.info("user create method called {}", newUser);
 
     BaseResponse<?> response = userService.createUser(newUser);
@@ -67,17 +72,28 @@ public class UserController extends ApiCrudController {
     }
   }
 
-  public BaseResponse<?> updateById(String id, @Validated @RequestBody User userToUpdate) {
-    userService.updateById(id, userToUpdate);
-    return null;
-  }
-
   @Override
+  public BaseResponse<?> patchById(String id, @RequestBody PatchRequest changes) {
 
-  public BaseResponse<?> patchById(String id) {
-
-    return null;
+    ResponseEntity<?> responseEntity = userService.patchUserById(id, changes);
+    if (responseEntity.getBody() != null) {
+      return new BaseResponse<>(responseEntity, "PATCHED");
+    } else {
+      return new BaseResponse<>(ResponseEntity.badRequest(), "ERROR");
+    }
   }
+
+  @PutMapping("/updateById")
+  public BaseResponse<?> updateById(String id, @Valid @RequestBody User userToUpdate) {
+    BaseResponse<?> baseResponse = userService.updateById(id, userToUpdate);
+
+    if (baseResponse == null || baseResponse.getData() == null) {
+      return new BaseResponse<>(null, "Error");
+    } else {
+      return baseResponse;
+    }
+  }
+
 
   @Override
   public BaseResponse<?> deleteById(String id) {

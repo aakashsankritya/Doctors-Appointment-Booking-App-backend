@@ -1,6 +1,7 @@
 package com.medizine.backend.controller;
 
 import com.medizine.backend.exchanges.BaseResponse;
+import com.medizine.backend.exchanges.PatchRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ abstract class ApiCrudController {
   public abstract ResponseEntity<?> getById(String id);
 
   @PatchMapping("/patchById")
-  public abstract BaseResponse<?> patchById(String id);
+  public abstract BaseResponse<?> patchById(String id, PatchRequest patchRequest);
 
   @DeleteMapping("/deleteById")
   public abstract BaseResponse<?> deleteById(String id);

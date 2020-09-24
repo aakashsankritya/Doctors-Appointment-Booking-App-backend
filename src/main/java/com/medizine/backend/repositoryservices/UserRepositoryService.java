@@ -2,6 +2,8 @@ package com.medizine.backend.repositoryservices;
 
 import com.medizine.backend.dto.User;
 import com.medizine.backend.exchanges.BaseResponse;
+import com.medizine.backend.exchanges.PatchRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -15,4 +17,5 @@ public interface UserRepositoryService {
 
   BaseResponse<?> updateUserById(String id, User userToUpdate);
 
+  ResponseEntity<?> patchUserById(String id, PatchRequest changes);
 }
