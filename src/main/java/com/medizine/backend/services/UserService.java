@@ -4,7 +4,7 @@ import com.medizine.backend.dto.Doctor;
 import com.medizine.backend.dto.User;
 import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.GetUserResponse;
-import com.medizine.backend.exchanges.PatchRequest;
+import com.medizine.backend.exchanges.UserPatchRequest;
 import com.medizine.backend.repositoryservices.DoctorRepositoryService;
 import com.medizine.backend.repositoryservices.UserRepositoryService;
 import lombok.extern.log4j.Log4j2;
@@ -53,7 +53,7 @@ public class UserService implements BaseService {
 
   }
 
-  public ResponseEntity<?> patchUserById(String id, PatchRequest changes) {
-    return userRepositoryService.patchUserById(id, changes);
+  public ResponseEntity<?> patchUserById(String id, UserPatchRequest changes) {
+    return userRepositoryService.patchUser(id, changes);
   }
 }
