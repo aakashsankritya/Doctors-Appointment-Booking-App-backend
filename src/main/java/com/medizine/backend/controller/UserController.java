@@ -3,7 +3,7 @@ package com.medizine.backend.controller;
 import com.medizine.backend.dto.User;
 import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.GetUserResponse;
-import com.medizine.backend.exchanges.PatchRequest;
+import com.medizine.backend.exchanges.UserPatchRequest;
 import com.medizine.backend.services.BaseService;
 import com.medizine.backend.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -30,14 +30,14 @@ public class UserController extends ApiCrudController {
   private BaseService baseService;
 
   @GetMapping(GET_DOCTORS)
-  public ResponseEntity<GetUserResponse> getAvailableDoctors() {
+  public BaseResponse<?> getAvailableDoctors() {
     log.info("getAvailableDoctors called by user");
 
     GetUserResponse userResponse = baseService.getAvailableDoctors();
     if (userResponse != null) {
-      return ResponseEntity.ok().body(userResponse);
+      return new BaseResponse<>(userResponse, "SUCCESS");
     } else {
-      return ResponseEntity.badRequest().body(null);
+      return new BaseResponse<>(ResponseEntity.noContent().build(), "NOT FOUND");
     }
   }
 
@@ -72,12 +72,12 @@ public class UserController extends ApiCrudController {
     }
   }
 
-  @Override
-  public BaseResponse<?> patchById(String id, @RequestBody PatchRequest changes) {
+  @PatchMapping("/patchById")
+  public BaseResponse<?> patchById(String id, @Valid @RequestBody UserPatchRequest patchRequest) {
 
-    ResponseEntity<?> responseEntity = userService.patchUserById(id, changes);
-    if (responseEntity.getBody() != null) {
-      return new BaseResponse<>(responseEntity, "PATCHED");
+    ResponseEntity<?> responseEntity = userService.patchUserById(id, patchRequest);
+    if (responseEntity != null) {
+      return new BaseResponse<>(responseEntity, responseEntity.getStatusCode().isError() ? "ERROR" : "PATCHED");
     } else {
       return new BaseResponse<>(ResponseEntity.badRequest(), "ERROR");
     }
