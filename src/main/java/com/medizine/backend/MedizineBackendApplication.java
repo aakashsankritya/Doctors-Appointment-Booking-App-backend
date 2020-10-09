@@ -1,6 +1,7 @@
 package com.medizine.backend;
 
 import com.medizine.backend.config.StorageProperties;
+import com.medizine.backend.models.Media;
 import com.medizine.backend.services.MediaStorageService;
 import com.mongodb.WriteConcern;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +16,7 @@ import org.springframework.data.mongodb.core.WriteConcernResolver;
 
 @Log4j2
 @SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
+@EnableConfigurationProperties({StorageProperties.class, Media.class})
 public class MedizineBackendApplication {
 
   public static void main(String[] args) {

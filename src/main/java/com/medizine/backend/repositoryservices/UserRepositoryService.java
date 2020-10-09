@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserRepositoryService {
 
-  BaseResponse<User> saveUser(User userToSave);
+  BaseResponse<User> createUser(User userToSave);
 
   List<User> getAll();
 

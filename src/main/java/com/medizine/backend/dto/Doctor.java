@@ -1,35 +1,43 @@
 package com.medizine.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 
 @Data
+@Builder
 @Document(collection = "doctors")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Doctor extends BaseEntity {
 
-  public String name;
+  @NotNull
+  @Size(max = 100)
+  private String name;
 
-  public String phoneNumber; // Not Modifiable
+  @NotNull
+  private String phoneNumber; // Not Modifiable
 
-  public String countryCode; // // Not Modifiable
+  @NotNull
+  private String countryCode; // // Not Modifiable
 
-  public String emailAddress;
+  @Pattern(regexp = "\\S+@\\S+\\.\\S+")
+  private String emailAddress;
 
-  public LocalDate dob;
+  @NotNull
+  private LocalDate dob;
 
-  public String gender;
+  private String gender;
 
+  @NotNull
   private String speciality;
 
+  @Min(0)
+  @Max(20)
   private int experience;
 
   private String about;
@@ -38,4 +46,5 @@ public class Doctor extends BaseEntity {
 
   private String location;
 
+  private Status status;
 }
