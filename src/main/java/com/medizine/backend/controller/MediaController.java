@@ -1,16 +1,23 @@
 package com.medizine.backend.controller;
 
-import com.medizine.backend.exceptions.StorageFileNotFoundException;
-import com.medizine.backend.services.MediaStorageService;
+import com.medizine.backend.exchanges.UploadMediaResponse;
+import com.medizine.backend.services.MediaService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @Log4j2
 @Controller
@@ -18,33 +25,62 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MediaController {
 
   @Autowired
-  private MediaStorageService mediaService;
+  private MediaService mediaService;
 
-  @GetMapping("/files/{filename:.+}")
-  @ResponseBody
-  public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+  @PostMapping("/uploadFile")
+  public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+                                      @RequestParam("userId") String UserId,
+                                      @RequestParam("docType") String docType) {
 
-    Resource file = mediaService.loadAsResource(filename);
+    String fileName = mediaService.storeFile(file, UserId, docType);
 
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=\"" + file.getFilename() + "\"")
-        .body(file);
+    String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+        .path("/downloadFile/").path(fileName)
+        .toUriString();
+
+    UploadMediaResponse response = new UploadMediaResponse(fileName, fileDownloadUri, file.getContentType());
+    return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/upload")
-  public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                 RedirectAttributes redirectAttributes) {
+  @GetMapping("/downloadFile")
+  public ResponseEntity<Resource> downloadFile(@RequestParam("userId") String userId,
+                                               @RequestParam("docType") String docType,
+                                               HttpServletRequest request) {
 
-    mediaService.store(file);
+    String fileName = mediaService.getDocumentName(userId, docType);
 
-    redirectAttributes.addFlashAttribute("message",
-        "You successfully uploaded " + file.getOriginalFilename() + "!");
+    Resource resource = null;
 
-    return "redirect:/";
-  }
+    if (fileName != null && !fileName.isEmpty()) {
 
-  @ExceptionHandler(StorageFileNotFoundException.class)
-  public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-    return ResponseEntity.notFound().build();
+      try {
+        resource = mediaService.loadFileAsResource(fileName);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      // Try to determine file's content type
+      String contentType = null;
+      try {
+        assert resource != null;
+        contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+
+      } catch (IOException ex) {
+        //logger.info("Could not determine file type.");
+      }
+
+      // Fallback to the default content type if type could not be determined
+
+      if (contentType == null) {
+
+        contentType = "application/octet-stream";
+      }
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(contentType))
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+          .body(resource);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 }

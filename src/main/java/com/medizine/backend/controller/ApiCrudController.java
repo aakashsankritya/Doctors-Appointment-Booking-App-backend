@@ -1,7 +1,6 @@
 package com.medizine.backend.controller;
 
 import com.medizine.backend.exchanges.BaseResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,7 +12,7 @@ abstract class ApiCrudController {
   public abstract BaseResponse<?> getMany();
 
   @GetMapping("/getById")
-  public abstract ResponseEntity<?> getById(String id);
+  public abstract BaseResponse<?> getById(String id);
 
   @DeleteMapping("/deleteById")
   public abstract BaseResponse<?> deleteById(String id);

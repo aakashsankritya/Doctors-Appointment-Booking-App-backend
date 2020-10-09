@@ -3,7 +3,6 @@ package com.medizine.backend.repositoryservices;
 import com.medizine.backend.dto.Status;
 import com.medizine.backend.dto.User;
 import com.medizine.backend.exchanges.BaseResponse;
-import com.medizine.backend.exchanges.PatchHelper;
 import com.medizine.backend.exchanges.UserPatchRequest;
 import com.medizine.backend.repositories.UserRepository;
 import lombok.extern.log4j.Log4j2;
@@ -30,11 +29,8 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
   @Autowired
   private MongoTemplate mongoTemplate;
 
-  @Autowired
-  private PatchHelper patchHelper;
-
   @Override
-  public BaseResponse<User> saveUser(User userToBeSaved) {
+  public BaseResponse<User> createUser(User userToBeSaved) {
 
     if (isUserAlreadyExist(userToBeSaved)) {
       return new BaseResponse<>(null, "Already Exists");
@@ -83,7 +79,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
           .bloodGroup(userToUpdate.getBloodGroup())
           .weight(userToUpdate.getWeight())
           .problems(userToUpdate.getProblems())
-          .status(userToUpdate.getStatus()).build();
+          .status(Status.ACTIVE).build();
 
       toSave.id = currentUser.id;
       userRepository.save(toSave);

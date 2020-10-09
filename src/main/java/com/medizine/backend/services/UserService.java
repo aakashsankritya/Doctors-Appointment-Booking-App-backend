@@ -24,6 +24,9 @@ public class UserService implements BaseService {
   @Autowired
   private UserRepositoryService userRepositoryService;
 
+  public BaseResponse<?> updateEntityById(String id, User userToUpdate) {
+    return userRepositoryService.updateUserById(id, userToUpdate);
+  }
 
   @Override
   public GetUserResponse getAvailableDoctors() {
@@ -32,7 +35,7 @@ public class UserService implements BaseService {
   }
 
   public BaseResponse<?> createUser(User newUser) {
-    return userRepositoryService.saveUser(newUser);
+    return userRepositoryService.createUser(newUser);
   }
 
   public BaseResponse<?> getAllUser() {
@@ -44,24 +47,22 @@ public class UserService implements BaseService {
     }
   }
 
-  public BaseResponse<?> findUserById(String id) {
+  @Override
+  public BaseResponse<?> findEntityById(String id) {
     return userRepositoryService.getUserById(id);
   }
 
-  public BaseResponse<?> updateById(String id, User userToUpdate) {
-    return userRepositoryService.updateUserById(id, userToUpdate);
-
-  }
-
-  public ResponseEntity<?> patchUserById(String id, UserPatchRequest changes) {
+  public ResponseEntity<?> patchEntityById(String id, UserPatchRequest changes) {
     return userRepositoryService.patchUser(id, changes);
   }
 
-  public BaseResponse<?> deleteUser(String id) {
+  @Override
+  public BaseResponse<?> deleteEntity(String id) {
     return userRepositoryService.deleteUserById(id);
   }
 
-  public BaseResponse<?> restoreUser(String id) {
+  @Override
+  public BaseResponse<?> restoreEntity(String id) {
     return userRepositoryService.restoreUserById(id);
   }
 }
