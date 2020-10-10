@@ -44,12 +44,16 @@ public class AppointmentController {
   }
 
   @PatchMapping("/book")
-  public BaseResponse<?> bookSlotByPatientId(@Valid @RequestBody BookSlotRequest slotRequest) {
+  public ResponseEntity<?> bookSlotByPatientId(@Valid @RequestBody BookSlotRequest slotRequest) {
     ResponseEntity<?> slotBookingResponse = slotService.bookSlot(slotRequest);
     if (slotBookingResponse != null) {
-      return new BaseResponse<>(slotBookingResponse, "Request fulfilled");
+      if (slotBookingResponse.getStatusCode().is4xxClientError()) {
+        return ResponseEntity.badRequest().body(slotBookingResponse);
+      } else {
+        return ResponseEntity.ok(slotBookingResponse);
+      }
     } else {
-      return new BaseResponse<>(ResponseEntity.badRequest().build(), "Error");
+      return ResponseEntity.badRequest().build();
     }
   }
 }
