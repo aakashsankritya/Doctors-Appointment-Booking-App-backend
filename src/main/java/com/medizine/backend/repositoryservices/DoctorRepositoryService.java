@@ -21,4 +21,7 @@ public interface DoctorRepositoryService {
   BaseResponse<?> deleteDoctorById(String id);
 
   BaseResponse<?> restoreDoctorById(String id);
+
+  BaseResponse<?> getDoctorByPhone(String countryCode, String phoneNumber);
+
 }

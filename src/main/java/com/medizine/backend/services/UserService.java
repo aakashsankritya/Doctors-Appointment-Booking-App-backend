@@ -65,4 +65,9 @@ public class UserService implements BaseService {
   public BaseResponse<?> restoreEntity(String id) {
     return userRepositoryService.restoreUserById(id);
   }
+
+  @Override
+  public BaseResponse<?> findEntityByPhone(String countryCode, String phoneNumber) {
+    return userRepositoryService.findUserByPhone(countryCode, phoneNumber);
+  }
 }

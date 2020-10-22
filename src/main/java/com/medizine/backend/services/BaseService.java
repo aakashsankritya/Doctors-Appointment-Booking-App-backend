@@ -13,4 +13,5 @@ public interface BaseService {
 
   BaseResponse<?> restoreEntity(String id);
 
+  BaseResponse<?> findEntityByPhone(String countryCode, String phoneNumber);
 }

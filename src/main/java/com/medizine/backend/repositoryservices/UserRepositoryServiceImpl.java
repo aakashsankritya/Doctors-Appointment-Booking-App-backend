@@ -165,6 +165,22 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
     return new BaseResponse<>(null, "Bad Request");
   }
 
+  @Override
+  public BaseResponse<?> findUserByPhone(String countryCode, String phoneNumber) {
+    User foundUser = userRepository.findUserByPhoneNumber(phoneNumber);
+
+    if (foundUser != null && foundUser.getCountryCode().substring(1).equals(countryCode)) {
+      log.info("Found User Phone is {} and countryCode is {}",
+          foundUser.getPhoneNumber(), foundUser.getCountryCode());
+
+      return new BaseResponse<>(foundUser, "FOUND");
+    } else {
+
+      log.info("User not found by countryCode and phone {} {}", countryCode, phoneNumber);
+      return new BaseResponse<>(null, "NOT FOUND");
+    }
+  }
+
   private boolean isUserAlreadyExist(User userToSave) {
     List<User> savedUserList = userRepository.findAll();
     for (User u : savedUserList) {

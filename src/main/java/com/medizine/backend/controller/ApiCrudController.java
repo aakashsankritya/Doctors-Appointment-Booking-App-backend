@@ -14,6 +14,9 @@ abstract class ApiCrudController {
   @GetMapping("/getById")
   public abstract BaseResponse<?> getById(String id);
 
+  @GetMapping("/existByPhone")
+  public abstract BaseResponse<?> findByPhoneNumber(String countryCode, String phoneNumber);
+
   @DeleteMapping("/deleteById")
   public abstract BaseResponse<?> deleteById(String id);
 

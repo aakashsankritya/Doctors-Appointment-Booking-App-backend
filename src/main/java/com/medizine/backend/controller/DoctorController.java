@@ -88,6 +88,11 @@ public class DoctorController extends ApiCrudController {
   }
 
   @Override
+  public BaseResponse<?> findByPhoneNumber(String countryCode, String phoneNumber) {
+    return doctorService.findEntityByPhone(countryCode, phoneNumber);
+  }
+
+  @Override
   public BaseResponse<?> deleteById(String id) {
     return doctorService.deleteEntity(id);
   }
