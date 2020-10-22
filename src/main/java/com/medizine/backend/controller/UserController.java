@@ -96,6 +96,16 @@ public class UserController extends ApiCrudController {
   }
 
   @Override
+  public BaseResponse<?> findByPhoneNumber(String countryCode, String phoneNumber) {
+    BaseResponse<?> response = userService.findEntityByPhone(countryCode, phoneNumber);
+    if (response.getMessage().equals("NOT FOUND")) {
+      return new BaseResponse<>(null, response.getMessage());
+    }
+
+    return userService.findEntityByPhone(countryCode, phoneNumber);
+  }
+
+  @Override
   public BaseResponse<?> deleteById(String id) {
     return userService.deleteEntity(id);
   }

@@ -22,4 +22,6 @@ public interface UserRepositoryService {
   BaseResponse<?> deleteUserById(String id);
 
   BaseResponse<?> restoreUserById(String id);
+
+  BaseResponse<?> findUserByPhone(String countryCode, String phoneNumber);
 }

@@ -50,4 +50,9 @@ public class DoctorService implements BaseService {
   public BaseResponse<?> restoreEntity(String id) {
     return doctorRepositoryService.restoreDoctorById(id);
   }
+
+  @Override
+  public BaseResponse<?> findEntityByPhone(String countryCode, String phoneNumber) {
+    return doctorRepositoryService.getDoctorByPhone(countryCode, phoneNumber);
+  }
 }

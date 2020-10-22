@@ -5,6 +5,7 @@ import com.medizine.backend.dto.Status;
 import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.DoctorPatchRequest;
 import com.medizine.backend.repositories.DoctorRepository;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import javax.inject.Provider;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
 
@@ -157,6 +159,20 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
       return new BaseResponse<>(ResponseEntity.ok().body(restoredDoctor), "Restored");
     }
     return new BaseResponse<>(null, "Bad Request");
+  }
+
+  @Override
+  public BaseResponse<?> getDoctorByPhone(String countryCode, String phoneNumber) {
+    Doctor foundDoctor = doctorRepository.findDoctorByPhoneNumber(phoneNumber);
+
+    if (foundDoctor != null && foundDoctor.getCountryCode().substring(1).equals(countryCode)) {
+      log.info("Found Doctor Phone is {} and countryCode is {}",
+          foundDoctor.getPhoneNumber(), foundDoctor.getCountryCode());
+      return new BaseResponse<>(foundDoctor, "FOUND");
+    } else {
+      log.info("Doctor not found by countryCode and phone {} {}", countryCode, phoneNumber);
+      return new BaseResponse<>(null, "NOT FOUND");
+    }
   }
 
   private boolean isDoctorAlreadyExist(Doctor doctorToSave) {
