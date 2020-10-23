@@ -185,6 +185,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
     List<User> savedUserList = userRepository.findAll();
     for (User u : savedUserList) {
       if (u.getPhoneNumber().equals(userToSave.getPhoneNumber())
+          && u.getCountryCode().equals(userToSave.getCountryCode())
           && u.getStatus() == Status.ACTIVE) {
         return true;
       }

@@ -165,6 +165,9 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
   public BaseResponse<?> getDoctorByPhone(String countryCode, String phoneNumber) {
     Doctor foundDoctor = doctorRepository.findDoctorByPhoneNumber(phoneNumber);
 
+    log.info("Method Called to find Doctor by countryCode {} and phoneNumber {}",
+        countryCode, phoneNumber);
+
     if (foundDoctor != null && foundDoctor.getCountryCode().substring(1).equals(countryCode)) {
       log.info("Found Doctor Phone is {} and countryCode is {}",
           foundDoctor.getPhoneNumber(), foundDoctor.getCountryCode());
@@ -176,9 +179,10 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
   }
 
   private boolean isDoctorAlreadyExist(Doctor doctorToSave) {
-    List<Doctor> savedUserList = doctorRepository.findAll();
-    for (Doctor d : savedUserList) {
+    List<Doctor> savedDoctorList = doctorRepository.findAll();
+    for (Doctor d : savedDoctorList) {
       if (d.getPhoneNumber() != null && d.getPhoneNumber().equals(doctorToSave.getPhoneNumber())
+          && d.getCountryCode().equals(doctorToSave.getCountryCode())
           && d.getStatus() == Status.ACTIVE) {
         return true;
       }
