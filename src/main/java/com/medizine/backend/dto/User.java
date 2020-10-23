@@ -3,9 +3,15 @@ package com.medizine.backend.dto;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+/**
+ * At signup user can be created using
+ * CountryCode and PhoneNumber only.
+ */
 @Data
 @Builder
 @Document(collection = "users")
@@ -14,7 +20,6 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
-  @NotNull
   @Size(max = 100)
   private String name;
 
@@ -27,7 +32,6 @@ public class User extends BaseEntity {
   @NotNull
   private String countryCode; // Not Modifiable
 
-  @NotNull
   private LocalDate dob;
 
   private String gender;
@@ -36,8 +40,6 @@ public class User extends BaseEntity {
 
   private String bloodGroup;
 
-  @Min(10)
-  @Max(150)
   private int weight;
 
   private String[] problems;
