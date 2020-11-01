@@ -63,11 +63,11 @@ public class UserController extends ApiCrudController {
   @PatchMapping("/patchById")
   public BaseResponse<?> patchById(String id, @Valid @RequestBody UserPatchRequest patchRequest) {
 
-    ResponseEntity<?> responseEntity = userService.patchEntityById(id, patchRequest);
-    if (responseEntity != null) {
-      return new BaseResponse<>(responseEntity, responseEntity.getStatusCode().isError() ? "ERROR" : "PATCHED");
+    BaseResponse<?> response = userService.patchEntityById(id, patchRequest);
+    if (response.getData() != null) {
+      return response;
     } else {
-      return new BaseResponse<>(ResponseEntity.badRequest(), "ERROR");
+      return new BaseResponse<>(null, "ERROR");
     }
   }
 
