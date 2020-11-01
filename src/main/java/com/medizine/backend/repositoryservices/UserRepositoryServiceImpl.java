@@ -91,12 +91,12 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
   }
 
   @Override
-  public ResponseEntity<?> patchUser(String id, UserPatchRequest changes) {
+  public BaseResponse<?> patchUser(String id, UserPatchRequest changes) {
 
     User initialUser = (User) getUserById(id).getData();
 
     if (initialUser == null) {
-      return ResponseEntity.notFound().build();
+      return new BaseResponse<>(null, "NOT FOUND");
     }
 
     if (changes.getName() != null) {
@@ -133,7 +133,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
 
     userRepository.save(initialUser);
 
-    return ResponseEntity.ok(initialUser);
+    return new BaseResponse<>(initialUser, "PATCHED");
   }
 
   @Override
@@ -169,7 +169,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
   public BaseResponse<?> findUserByPhone(String countryCode, String phoneNumber) {
     User foundUser = userRepository.findUserByPhoneNumber(phoneNumber);
 
-    if (foundUser != null && foundUser.getCountryCode().substring(1).equals(countryCode)) {
+    if (foundUser != null && foundUser.getCountryCode().equals(countryCode)) {
       log.info("Found User Phone is {} and countryCode is {}",
           foundUser.getPhoneNumber(), foundUser.getCountryCode());
 

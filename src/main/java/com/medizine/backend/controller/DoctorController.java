@@ -56,7 +56,7 @@ public class DoctorController extends ApiCrudController {
     if (response.getData() != null) {
       return response;
     } else {
-      return new BaseResponse<>(ResponseEntity.badRequest(), "ERROR");
+      return new BaseResponse<>(null, "ERROR");
     }
   }
 

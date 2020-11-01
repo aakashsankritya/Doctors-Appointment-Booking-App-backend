@@ -70,7 +70,7 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
     Doctor initialDoctor = (Doctor) getDoctorById(id).getData();
 
     if (initialDoctor == null) {
-      return new BaseResponse<>(ResponseEntity.notFound().build(), "NOT FOUND");
+      return new BaseResponse<>(null, "NOT FOUND");
     }
 
     if (changes.getName() != null) {
@@ -111,7 +111,7 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
 
     doctorRepository.save(initialDoctor);
 
-    return new BaseResponse<>(ResponseEntity.ok(initialDoctor), "PATCHED");
+    return new BaseResponse<>(initialDoctor, "PATCHED");
   }
 
   @Override
@@ -168,7 +168,7 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
     log.info("Method Called to find Doctor by countryCode {} and phoneNumber {}",
         countryCode, phoneNumber);
 
-    if (foundDoctor != null && foundDoctor.getCountryCode().substring(1).equals(countryCode)) {
+    if (foundDoctor != null && foundDoctor.getCountryCode().equals(countryCode)) {
       log.info("Found Doctor Phone is {} and countryCode is {}",
           foundDoctor.getPhoneNumber(), foundDoctor.getCountryCode());
       return new BaseResponse<>(foundDoctor, "FOUND");
