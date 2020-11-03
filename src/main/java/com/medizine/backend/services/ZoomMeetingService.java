@@ -4,7 +4,6 @@ import com.medizine.backend.dto.ZoomMeeting;
 import com.medizine.backend.exchanges.ZoomMeetingRequest;
 import com.medizine.backend.repositoryservices.DoctorRepositoryService;
 import com.medizine.backend.repositoryservices.MeetingRepositoryService;
-import com.medizine.backend.repositoryservices.UserRepositoryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +18,7 @@ public class ZoomMeetingService {
     private MeetingRepositoryService meetingRepositoryService;
 
     @Autowired
-    private UserRepositoryService userRepositoryService;
-
-    @Autowired
     private DoctorRepositoryService doctorRepositoryService;
-
-    @Autowired
-    private MediaService mediaService;
 
 
     public ResponseEntity<?> getById(String id) {
@@ -47,7 +40,7 @@ public class ZoomMeetingService {
             return ResponseEntity.badRequest().body("Not Processable");
         }
 
-        ZoomMeeting zoomMeeting = meetingRepositoryService.getByModuleIdAndType(hostId);
+        ZoomMeeting zoomMeeting = meetingRepositoryService.getByHostId(hostId);
 
         if (zoomMeeting == null) {
             return ResponseEntity.notFound().build();

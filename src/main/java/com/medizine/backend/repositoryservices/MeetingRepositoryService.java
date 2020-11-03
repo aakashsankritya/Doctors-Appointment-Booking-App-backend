@@ -7,7 +7,7 @@ public interface MeetingRepositoryService {
 
     ZoomMeeting getById(String id);
 
-    ZoomMeeting getByModuleIdAndType(String moduleId, String moduleType);
+    ZoomMeeting getByHostId(String hostId);
 
     ZoomMeeting createMeeting(ZoomMeeting zoomMeeting);
 
