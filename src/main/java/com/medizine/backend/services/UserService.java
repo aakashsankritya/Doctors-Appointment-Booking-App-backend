@@ -2,13 +2,13 @@ package com.medizine.backend.services;
 
 import com.medizine.backend.dto.Doctor;
 import com.medizine.backend.dto.User;
-import com.medizine.backend.exchanges.BaseResponse;
-import com.medizine.backend.exchanges.GetUserResponse;
+import com.medizine.backend.exchanges.DoctorListResponse;
 import com.medizine.backend.exchanges.UserPatchRequest;
 import com.medizine.backend.repositoryservices.DoctorRepositoryService;
 import com.medizine.backend.repositoryservices.UserRepositoryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,50 +23,45 @@ public class UserService implements BaseService {
   @Autowired
   private UserRepositoryService userRepositoryService;
 
-  public BaseResponse<?> updateEntityById(String id, User userToUpdate) {
+  public ResponseEntity<?> updateEntityById(String id, User userToUpdate) {
     return userRepositoryService.updateUserById(id, userToUpdate);
   }
 
   @Override
-  public GetUserResponse getAvailableDoctors() {
+  public DoctorListResponse getAvailableDoctors() {
     List<Doctor> doctorList = doctorRepositoryService.getAllDoctorsCloseBy();
-    return new GetUserResponse(doctorList);
+    return new DoctorListResponse(doctorList);
   }
 
-  public BaseResponse<?> createUser(User newUser) {
+  public ResponseEntity<?> createUser(User newUser) {
     return userRepositoryService.createUser(newUser);
   }
 
-  public BaseResponse<?> getAllUser() {
-    List<User> userList = userRepositoryService.getAll();
-    if (userList != null) {
-      return new BaseResponse<>(userList, "OK");
-    } else {
-      return new BaseResponse<>(null, "NOT FOUND");
-    }
+  public List<User> getAllUser() {
+    return userRepositoryService.getAll();
   }
 
   @Override
-  public BaseResponse<?> findEntityById(String id) {
+  public ResponseEntity<?> findEntityById(String id) {
     return userRepositoryService.getUserById(id);
   }
 
-  public BaseResponse<?> patchEntityById(String id, UserPatchRequest changes) {
+  public ResponseEntity<?> patchEntityById(String id, UserPatchRequest changes) {
     return userRepositoryService.patchUser(id, changes);
   }
 
   @Override
-  public BaseResponse<?> deleteEntity(String id) {
+  public ResponseEntity<?> deleteEntity(String id) {
     return userRepositoryService.deleteUserById(id);
   }
 
   @Override
-  public BaseResponse<?> restoreEntity(String id) {
+  public ResponseEntity<?> restoreEntity(String id) {
     return userRepositoryService.restoreUserById(id);
   }
 
   @Override
-  public BaseResponse<?> findEntityByPhone(String countryCode, String phoneNumber) {
+  public ResponseEntity<?> findEntityByPhone(String countryCode, String phoneNumber) {
     return userRepositoryService.findUserByPhone(countryCode, phoneNumber);
   }
 }

@@ -1,17 +1,17 @@
 package com.medizine.backend.services;
 
-import com.medizine.backend.exchanges.BaseResponse;
-import com.medizine.backend.exchanges.GetUserResponse;
+import com.medizine.backend.exchanges.DoctorListResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface BaseService {
 
-  GetUserResponse getAvailableDoctors();
+    DoctorListResponse getAvailableDoctors();
 
-  BaseResponse<?> findEntityById(String id);
+    ResponseEntity<?> findEntityById(String id);
 
-  BaseResponse<?> deleteEntity(String id);
+    ResponseEntity<?> deleteEntity(String id);
 
-  BaseResponse<?> restoreEntity(String id);
+    ResponseEntity<?> restoreEntity(String id);
 
-  BaseResponse<?> findEntityByPhone(String countryCode, String phoneNumber);
+    ResponseEntity<?> findEntityByPhone(String countryCode, String phoneNumber);
 }

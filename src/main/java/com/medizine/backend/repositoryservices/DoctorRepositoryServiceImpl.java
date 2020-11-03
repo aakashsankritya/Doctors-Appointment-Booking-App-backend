@@ -2,7 +2,6 @@ package com.medizine.backend.repositoryservices;
 
 import com.medizine.backend.dto.Doctor;
 import com.medizine.backend.dto.Status;
-import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.DoctorPatchRequest;
 import com.medizine.backend.repositories.DoctorRepository;
 import lombok.extern.log4j.Log4j2;
@@ -26,32 +25,33 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
   private Provider<ModelMapper> modelMapperProvider;
 
   @Override
-  public BaseResponse<Doctor> createDoctor(Doctor doctorToSave) {
+  public ResponseEntity<?> createDoctor(Doctor doctorToSave) {
     if (isDoctorAlreadyExist(doctorToSave)) {
-      return new BaseResponse<>(null, "Already Exists");
+      return ResponseEntity.badRequest().body("Doctor with same info already exist");
+
     } else {
       doctorToSave.setStatus(Status.ACTIVE);
       doctorRepository.save(doctorToSave);
-      return new BaseResponse<>(doctorToSave, "Saved");
+      return ResponseEntity.ok(doctorToSave);
     }
   }
 
   @Override
-  public BaseResponse<?> updateDoctorById(String id, Doctor doctorToUpdate) {
-    BaseResponse<?> response = getDoctorById(id);
+  public ResponseEntity<?> updateDoctorById(String id, Doctor doctorToUpdate) {
+    ResponseEntity<?> response = getDoctorById(id);
 
-    if (response.getData() != null) {
-      Doctor currentDoctor = (Doctor) response.getData();
+    if (response.getBody() != null) {
+      Doctor currentDoctor = (Doctor) response.getBody();
       // The name, phoneNumber, countryCode should not be modified.
       Doctor toSave = Doctor.builder().name(currentDoctor.getName())
-          .emailAddress(doctorToUpdate.getEmailAddress())
-          .phoneNumber(currentDoctor.getPhoneNumber())
-          .countryCode(currentDoctor.getCountryCode())
-          .dob(doctorToUpdate.getDob())
-          .gender(doctorToUpdate.getGender())
-          .speciality(doctorToUpdate.getSpeciality())
-          .experience(doctorToUpdate.getExperience())
-          .about(doctorToUpdate.getAbout())
+              .emailAddress(doctorToUpdate.getEmailAddress())
+              .phoneNumber(currentDoctor.getPhoneNumber())
+              .countryCode(currentDoctor.getCountryCode())
+              .dob(doctorToUpdate.getDob())
+              .gender(doctorToUpdate.getGender())
+              .speciality(doctorToUpdate.getSpeciality())
+              .experience(doctorToUpdate.getExperience())
+              .about(doctorToUpdate.getAbout())
           .language(doctorToUpdate.getLanguage())
           .location(doctorToUpdate.getLocation())
           .status(Status.ACTIVE).build();
@@ -59,18 +59,18 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
       toSave.id = currentDoctor.id;
       doctorRepository.save(toSave);
 
-      return new BaseResponse<>(toSave, "SAVED");
+      return ResponseEntity.ok(toSave);
     } else {
-      return new BaseResponse<>(null, "User not found");
+      return ResponseEntity.notFound().build();
     }
   }
 
   @Override
-  public BaseResponse<?> patchDoctor(String id, DoctorPatchRequest changes) {
-    Doctor initialDoctor = (Doctor) getDoctorById(id).getData();
+  public ResponseEntity<?> patchDoctor(String id, DoctorPatchRequest changes) {
+    Doctor initialDoctor = (Doctor) getDoctorById(id).getBody();
 
     if (initialDoctor == null) {
-      return new BaseResponse<>(null, "NOT FOUND");
+      return ResponseEntity.notFound().build();
     }
 
     if (changes.getName() != null) {
@@ -111,7 +111,7 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
 
     doctorRepository.save(initialDoctor);
 
-    return new BaseResponse<>(initialDoctor, "PATCHED");
+    return ResponseEntity.ok(initialDoctor);
   }
 
   @Override
@@ -122,59 +122,60 @@ public class DoctorRepositoryServiceImpl implements DoctorRepositoryService {
   }
 
   @Override
-  public BaseResponse<?> getDoctorById(String id) {
+  public ResponseEntity<?> getDoctorById(String id) {
 
     if (doctorRepository.findById(id).isPresent() &&
-        doctorRepository.findById(id).get().getStatus() == Status.ACTIVE) {
+            doctorRepository.findById(id).get().getStatus() == Status.ACTIVE) {
       Doctor doctor = doctorRepository.findById(id).get();
-      return new BaseResponse<>(doctor, "FOUND");
+      return ResponseEntity.ok(doctor);
     } else {
-      return new BaseResponse<>(null, "NOT FOUND");
+      return ResponseEntity.noContent().build();
     }
   }
 
   @Override
-  public BaseResponse<?> deleteDoctorById(String id) {
+  public ResponseEntity<?> deleteDoctorById(String id) {
     if (doctorRepository.findById(id).isEmpty()) {
-      return new BaseResponse<>(ResponseEntity.badRequest(), "BAD REQUEST");
+      return ResponseEntity.notFound().build();
     } else {
       // NOTE: WE ARE JUST UPDATING STATUS OF ENTITY.
-      Doctor doctorToDelete = (Doctor) getDoctorById(id).getData();
+      Doctor doctorToDelete = (Doctor) getDoctorById(id).getBody();
       doctorToDelete.setStatus(Status.INACTIVE);
       doctorRepository.save(doctorToDelete);
-      return new BaseResponse<>(ResponseEntity.ok().build(), "DELETED");
+      return ResponseEntity.ok().build();
     }
   }
 
   @Override
-  public BaseResponse<?> restoreDoctorById(String id) {
+  public ResponseEntity<?> restoreDoctorById(String id) {
     if (doctorRepository.findById(id).isPresent()) {
       Doctor restoredDoctor = doctorRepository.findById(id).get();
       if (restoredDoctor.getStatus() == Status.ACTIVE)
-        return new BaseResponse<>(restoredDoctor, "Already Exist");
+        return ResponseEntity.badRequest().body("Already Exist");
 
       restoredDoctor.setStatus(Status.ACTIVE);
       doctorRepository.save(restoredDoctor);
 
-      return new BaseResponse<>(ResponseEntity.ok().body(restoredDoctor), "Restored");
+      return ResponseEntity.ok(restoredDoctor);
     }
-    return new BaseResponse<>(null, "Bad Request");
+    return ResponseEntity.badRequest().body("Doctor not found by given id");
   }
 
   @Override
-  public BaseResponse<?> getDoctorByPhone(String countryCode, String phoneNumber) {
+  public ResponseEntity<?> getDoctorByPhone(String countryCode, String phoneNumber) {
     Doctor foundDoctor = doctorRepository.findDoctorByPhoneNumber(phoneNumber);
 
     log.info("Method Called to find Doctor by countryCode {} and phoneNumber {}",
-        countryCode, phoneNumber);
+            countryCode, phoneNumber);
 
-    if (foundDoctor != null && foundDoctor.getCountryCode().equals(countryCode)) {
+    if (foundDoctor != null && foundDoctor.getCountryCode().equals(countryCode)
+            && foundDoctor.getStatus().equals(Status.ACTIVE)) {
       log.info("Found Doctor Phone is {} and countryCode is {}",
-          foundDoctor.getPhoneNumber(), foundDoctor.getCountryCode());
-      return new BaseResponse<>(foundDoctor, "FOUND");
+              foundDoctor.getPhoneNumber(), foundDoctor.getCountryCode());
+      return ResponseEntity.ok(foundDoctor);
     } else {
       log.info("Doctor not found by countryCode and phone {} {}", countryCode, phoneNumber);
-      return new BaseResponse<>(null, "NOT FOUND");
+      return ResponseEntity.notFound().build();
     }
   }
 

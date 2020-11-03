@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 abstract class ApiCrudController {
 
-  @GetMapping("/getMany")
-  public abstract BaseResponse<?> getMany();
-
   @GetMapping("/getById")
   public abstract BaseResponse<?> getById(String id);
 
