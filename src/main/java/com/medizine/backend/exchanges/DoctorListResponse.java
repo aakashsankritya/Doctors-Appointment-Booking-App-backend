@@ -8,6 +8,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GetUserResponse {
-  private List<Doctor> doctorList;
+public class DoctorListResponse {
+    private List<Doctor> doctorList;
 }
