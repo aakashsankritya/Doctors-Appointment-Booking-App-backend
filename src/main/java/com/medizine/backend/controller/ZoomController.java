@@ -3,7 +3,6 @@ package com.medizine.backend.controller;
 import com.medizine.backend.dto.ZoomMeeting;
 import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.ZoomMeetingRequest;
-import com.medizine.backend.exchanges.ZoomMeetingResponse;
 import com.medizine.backend.services.ZoomMeetingService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,31 +23,31 @@ public class ZoomController {
     private ZoomMeetingService zoomMeetingService;
 
 
-    @ApiOperation(value = "get by id", response = ZoomMeetingResponse.class)
+    @ApiOperation(value = "get by id", response = ZoomMeeting.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "VALIDATION_ERROR"),
             @ApiResponse(code = 500, message = "SERVER_ERROR")
     })
     @GetMapping("/getById")
-    public BaseResponse<?> getById(String id) {
+    public ZoomMeeting getById(String id) {
         ResponseEntity<?> responseEntity = zoomMeetingService.getById(id);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return new BaseResponse<>((ZoomMeeting) responseEntity.getBody(), responseEntity.getStatusCode().toString());
+            return (ZoomMeeting) responseEntity.getBody();
         } else {
-            return new BaseResponse<>(null, responseEntity.getStatusCode().toString());
+            return null;
         }
     }
 
-    @ApiOperation(value = "get meeting by Host id", response = ZoomMeetingResponse.class)
+    @ApiOperation(value = "get meeting by Host id", response = ZoomMeeting.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "VALIDATION_ERROR"),
             @ApiResponse(code = 500, message = "SERVER_ERROR")
     })
     @GetMapping("/getByHostId")
-    public BaseResponse<?> getLiveMeetingByHostId(String hostId) {
+    public BaseResponse<ZoomMeeting> getLiveMeetingByHostId(String hostId) {
         ResponseEntity<?> response = zoomMeetingService.getLiveMeetingByHostId(hostId);
 
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -58,19 +57,19 @@ public class ZoomController {
         }
     }
 
-    @ApiOperation(value = "create a zoom meeting", response = ZoomMeetingResponse.class)
+    @ApiOperation(value = "create a zoom meeting", response = ZoomMeeting.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "VALIDATION_ERROR"),
             @ApiResponse(code = 500, message = "SERVER_ERROR")
     })
     @PostMapping("/create")
-    public BaseResponse<?> create(@RequestBody ZoomMeeting zoomMeeting) {
+    public ZoomMeeting create(@RequestBody ZoomMeeting zoomMeeting) {
         ResponseEntity<?> response = zoomMeetingService.create(zoomMeeting);
         if (response.getStatusCode().is2xxSuccessful()) {
-            return new BaseResponse<>((ZoomMeeting) response.getBody(), response.getStatusCode().toString());
+            return (ZoomMeeting) response.getBody();
         } else {
-            return new BaseResponse<>(null, response.getStatusCode().toString());
+            return null;
         }
     }
 
@@ -94,14 +93,14 @@ public class ZoomController {
 //    }
 
 
-    @ApiOperation(value = "patch meeting by id", response = ZoomMeetingResponse.class)
+    @ApiOperation(value = "patch meeting by id", response = ZoomMeeting.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "VALIDATION_ERROR"),
             @ApiResponse(code = 500, message = "SERVER_ERROR")
     })
     @PatchMapping("/patchById")
-    public BaseResponse<?> patchById(String id, @RequestBody ZoomMeetingRequest zoomMeetingRequest) {
+    public BaseResponse<ZoomMeeting> patchById(String id, @RequestBody ZoomMeetingRequest zoomMeetingRequest) {
 
         ResponseEntity<?> response = zoomMeetingService.patch(id, zoomMeetingRequest);
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -109,6 +108,5 @@ public class ZoomController {
         } else {
             return new BaseResponse<>(null, response.getStatusCode().toString());
         }
-
     }
 }

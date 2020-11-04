@@ -33,7 +33,7 @@ public class DoctorService implements BaseService {
   @Override
   public DoctorListResponse getAvailableDoctors() {
     List<Doctor> doctorList = doctorRepositoryService.getAllDoctorsCloseBy();
-    return new DoctorListResponse(doctorList);
+    return new DoctorListResponse(doctorList, "");
   }
 
   @Override

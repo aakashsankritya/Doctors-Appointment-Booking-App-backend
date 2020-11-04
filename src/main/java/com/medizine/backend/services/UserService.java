@@ -30,7 +30,7 @@ public class UserService implements BaseService {
   @Override
   public DoctorListResponse getAvailableDoctors() {
     List<Doctor> doctorList = doctorRepositoryService.getAllDoctorsCloseBy();
-    return new DoctorListResponse(doctorList);
+    return new DoctorListResponse(doctorList, "");
   }
 
   public ResponseEntity<?> createUser(User newUser) {
