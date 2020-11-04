@@ -1,5 +1,6 @@
 package com.medizine.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Document(collection = "slots")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
-public class AppointmentSlot extends BaseEntity {
+public class Slot extends BaseEntity {
 
   @NotNull
   private Date startTime; // 24hr format.
@@ -28,7 +29,10 @@ public class AppointmentSlot extends BaseEntity {
   @NotNull
   private String doctorId;
 
-  private String isBooked;
+  private boolean isBooked;
 
+  private boolean isBookedBySameUser;
+
+  @JsonIgnore
   private Map<Long, String> userBookingMap;
 }

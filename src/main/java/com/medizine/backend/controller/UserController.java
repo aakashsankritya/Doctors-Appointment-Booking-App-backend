@@ -48,7 +48,7 @@ public class UserController extends ApiCrudController {
   public DoctorListResponse getAvailableDoctors() {
     log.info("getAvailableDoctors called by user");
     DoctorListResponse availableDoctors = baseService.getAvailableDoctors();
-    return Objects.requireNonNullElseGet(availableDoctors, () -> new DoctorListResponse(null));
+    return Objects.requireNonNullElseGet(availableDoctors, () -> new DoctorListResponse(null, "ERROR"));
   }
 
   @ApiResponses({

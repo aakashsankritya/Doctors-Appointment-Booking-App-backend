@@ -26,12 +26,12 @@ public class DoctorController extends ApiCrudController {
   private DoctorService doctorService;
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Validation Error"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @PostMapping("/create")
-  public BaseResponse<?> create(@Valid @RequestBody Doctor newDoctor) {
+  public BaseResponse<Doctor> create(@Valid @RequestBody Doctor newDoctor) {
     log.info("doctor create method called {}", newDoctor);
     ResponseEntity<?> responseEntity = doctorService.createDoctor(newDoctor);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -42,12 +42,12 @@ public class DoctorController extends ApiCrudController {
   }
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Validation Error"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @PatchMapping("/patchById")
-  public BaseResponse<?> patchById(String id, @Valid @RequestBody DoctorPatchRequest patchRequest) {
+  public BaseResponse<Doctor> patchById(String id, @Valid @RequestBody DoctorPatchRequest patchRequest) {
     ResponseEntity<?> responseEntity = doctorService.patchDoctor(id, patchRequest);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());
@@ -58,12 +58,12 @@ public class DoctorController extends ApiCrudController {
 
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Validation Error"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @PutMapping("/updateById")
-  public BaseResponse<?> updateById(String id, @Valid @RequestBody Doctor doctorToUpdate) {
+  public BaseResponse<Doctor> updateById(String id, @Valid @RequestBody Doctor doctorToUpdate) {
     ResponseEntity<?> responseEntity = doctorService.updateDoctorById(id, doctorToUpdate);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());
@@ -85,12 +85,12 @@ public class DoctorController extends ApiCrudController {
 
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Validation Error"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @Override
-  public BaseResponse<?> getById(String id) {
+  public BaseResponse<Doctor> getById(String id) {
     ResponseEntity<?> responseEntity = doctorService.findEntityById(id);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());
@@ -100,12 +100,12 @@ public class DoctorController extends ApiCrudController {
   }
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Bad Request"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @Override
-  public BaseResponse<?> findByPhoneNumber(String countryCode, String phoneNumber) {
+  public BaseResponse<Doctor> findByPhoneNumber(String countryCode, String phoneNumber) {
     ResponseEntity<?> responseEntity = doctorService.findEntityByPhone(countryCode, phoneNumber);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());
@@ -115,12 +115,12 @@ public class DoctorController extends ApiCrudController {
   }
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Bad Request"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @Override
-  public BaseResponse<?> deleteById(String id) {
+  public BaseResponse<Doctor> deleteById(String id) {
     ResponseEntity<?> responseEntity = doctorService.deleteEntity(id);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());
@@ -130,12 +130,12 @@ public class DoctorController extends ApiCrudController {
   }
 
   @ApiResponses({
-          @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
+          @ApiResponse(code = 200, message = "OK", response = Doctor.class),
           @ApiResponse(code = 400, message = "Bad Request"),
           @ApiResponse(code = 500, message = "Server Error")
   })
   @Override
-  public BaseResponse<?> restoreById(String id) {
+  public BaseResponse<Doctor> restoreById(String id) {
     ResponseEntity<?> responseEntity = doctorService.restoreEntity(id);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Doctor) responseEntity.getBody(), responseEntity.getStatusCode().toString());

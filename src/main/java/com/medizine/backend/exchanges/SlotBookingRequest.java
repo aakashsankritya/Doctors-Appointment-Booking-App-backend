@@ -7,23 +7,24 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Valid
-public class BookSlotRequest {
+public class SlotBookingRequest {
 
-  @NotNull
-  private String DoctorId;
+    @NotNull
+    private String DoctorId;
 
-  @NotNull
-  private String slotId;
+    @NotNull
+    private String slotId;
 
-  @NotNull
-  private Long bookingDate; // Parse only the Date not the time.
+    @NotNull
+    private Date bookingDate; // Parse only the Date not the time.
 
-  @NotNull
-  private String patientId; // User for reference to the user.
+    @NotNull
+    private String userId; // User for reference to the user.
 }
