@@ -13,4 +13,5 @@ public interface MeetingRepositoryService {
 
     ZoomMeeting patchMeeting(ZoomMeetingRequest zoomMeetingRequest, String id);
 
+    ZoomMeeting getZoomMeetingByAppointmentId(String appointmentId);
 }

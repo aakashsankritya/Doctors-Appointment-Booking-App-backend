@@ -5,10 +5,10 @@ import com.medizine.backend.dto.Slot;
 
 import java.util.List;
 
-public class AppointmentSlotResponse extends BaseResponse<List<Slot>> {
+public class SlotResponse extends BaseResponse<List<Slot>> {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public AppointmentSlotResponse(List<Slot> data, String message) {
+    public SlotResponse(List<Slot> data, String message) {
         super(data, message);
     }
 }

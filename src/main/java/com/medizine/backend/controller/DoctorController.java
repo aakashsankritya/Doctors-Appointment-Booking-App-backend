@@ -104,7 +104,7 @@ public class DoctorController extends ApiCrudController {
           @ApiResponse(code = 400, message = "Bad Request"),
           @ApiResponse(code = 500, message = "Server Error")
   })
-  @Override
+  @GetMapping("/existByPhone")
   public BaseResponse<Doctor> findByPhoneNumber(String countryCode, String phoneNumber) {
     ResponseEntity<?> responseEntity = doctorService.findEntityByPhone(countryCode, phoneNumber);
     if (responseEntity.getStatusCode().is2xxSuccessful()) {

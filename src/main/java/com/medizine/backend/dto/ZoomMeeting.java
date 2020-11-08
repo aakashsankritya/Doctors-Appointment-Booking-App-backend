@@ -1,26 +1,33 @@
 package com.medizine.backend.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bson.types.ObjectId;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ZoomMeeting extends BaseEntity {
 
     private MultiLingual meetingTitle;
 
-    @ApiModelProperty(example = "5cbdd81f49911f6a1b2578c7", dataType = "string")
-    private ObjectId hostId;
+    @NotNull
+    private String hostId;
 
+    @NotNull
+    private String appointmentId;
+
+    @NotNull
     private String meetingNumber;
+
     private String meetingPassword;
+
     private String meetingStartTime;
     private String meetingDuration;
-    private String meetingUserCount;
+
     private ZoomMeetingStatus meetingStatus;
 
     private LinkedHashMap<String, String> meetingMetaData;

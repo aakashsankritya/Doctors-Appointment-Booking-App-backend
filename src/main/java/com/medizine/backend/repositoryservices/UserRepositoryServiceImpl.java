@@ -155,7 +155,6 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
       userToDelete.setStatus(Status.INACTIVE);
       userRepository.save(userToDelete);
       return ResponseEntity.ok(userToDelete);
-
     }
   }
 

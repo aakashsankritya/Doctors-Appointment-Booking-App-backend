@@ -130,7 +130,7 @@ public class UserController extends ApiCrudController {
           @ApiResponse(code = 400, message = "Bad Request"),
           @ApiResponse(code = 500, message = "Server Error")
   })
-  @Override
+  @GetMapping("/existByPhone")
   public BaseResponse<?> findByPhoneNumber(String countryCode, String phoneNumber) {
     ResponseEntity<?> response = userService.findEntityByPhone(countryCode, phoneNumber);
     if (response.getStatusCode().is2xxSuccessful()) {

@@ -70,4 +70,19 @@ public class ZoomMeetingService {
             return ResponseEntity.ok(patchedMeeting);
         }
     }
+
+    public ResponseEntity<?> getByAppointmentId(String appointmentId) {
+        if (appointmentId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Appointment id is not valid");
+        }
+
+        ZoomMeeting fetchedMeeting = meetingRepositoryService.getZoomMeetingByAppointmentId(appointmentId);
+
+        if (fetchedMeeting != null) {
+            return ResponseEntity.ok(fetchedMeeting);
+        } else {
+            return ResponseEntity.badRequest().body("Meeting not found");
+        }
+
+    }
 }
