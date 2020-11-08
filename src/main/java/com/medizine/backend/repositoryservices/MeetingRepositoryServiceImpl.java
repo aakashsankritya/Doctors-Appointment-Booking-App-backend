@@ -4,9 +4,10 @@ import com.medizine.backend.dto.ZoomMeeting;
 import com.medizine.backend.exchanges.ZoomMeetingRequest;
 import com.medizine.backend.repositories.ZoomRepository;
 import lombok.extern.log4j.Log4j2;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Log4j2
@@ -31,9 +32,7 @@ public class MeetingRepositoryServiceImpl implements MeetingRepositoryService {
 
         ZoomMeeting zoomMeeting;
 
-        ObjectId meetingHostId = new ObjectId(hostId);
-
-        zoomMeeting = zoomRepository.findByHostId(meetingHostId);
+        zoomMeeting = zoomRepository.findByHostId(hostId);
 
         return zoomMeeting;
     }
@@ -43,6 +42,16 @@ public class MeetingRepositoryServiceImpl implements MeetingRepositoryService {
 
         if (zoomMeeting == null) {
             return null;
+        }
+
+        // If meeting exist for a particular appointment id
+        // then delete them.
+        List<ZoomMeeting> meetingList = zoomRepository.findAllByAppointmentId(zoomMeeting.getAppointmentId());
+
+        log.info("Zoom Meeting Creation in Progress!!");
+        for (ZoomMeeting meeting : meetingList) {
+            log.info("Deleting the previous meeting history {}", meeting);
+            zoomRepository.deleteById(meeting.id);
         }
 
         ZoomMeeting savedMeeting;
@@ -70,6 +79,10 @@ public class MeetingRepositoryServiceImpl implements MeetingRepositoryService {
                 existingMeeting.setMeetingNumber(meetingRequest.getMeetingNumber());
             }
 
+            if (meetingRequest.getAppointmentId() != null && !meetingRequest.getAppointmentId().isEmpty()) {
+                existingMeeting.setAppointmentId(meetingRequest.getAppointmentId());
+            }
+
             if (meetingRequest.getMeetingPassword() != null) {
                 existingMeeting.setMeetingPassword(meetingRequest.getMeetingPassword());
             }
@@ -82,10 +95,6 @@ public class MeetingRepositoryServiceImpl implements MeetingRepositoryService {
                 existingMeeting.setMeetingDuration(meetingRequest.getMeetingDuration());
             }
 
-            if (meetingRequest.getMeetingUserCount() != null) {
-                existingMeeting.setMeetingUserCount(meetingRequest.getMeetingUserCount());
-            }
-
             if (meetingRequest.getMeetingStatus() != null) {
                 existingMeeting.setMeetingStatus(meetingRequest.getMeetingStatus());
             }
@@ -96,5 +105,10 @@ public class MeetingRepositoryServiceImpl implements MeetingRepositoryService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public ZoomMeeting getZoomMeetingByAppointmentId(String appointmentId) {
+        return zoomRepository.findByAppointmentId(appointmentId);
     }
 }

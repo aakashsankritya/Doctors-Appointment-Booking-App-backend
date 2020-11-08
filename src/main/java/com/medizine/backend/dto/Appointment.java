@@ -1,16 +1,18 @@
 package com.medizine.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@Document(collection = "appointment")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Appointments {
+public class Appointment extends BaseEntity {
 
     @NotNull
     private String doctorId;
@@ -19,10 +21,10 @@ public class Appointments {
     private String userId;
 
     @NotNull
-    private Date startTime;
+    private String slotId;
 
     @NotNull
-    private Date endTime;
+    private Date appointmentDate;
 
     @NotNull
     private Status STATUS;

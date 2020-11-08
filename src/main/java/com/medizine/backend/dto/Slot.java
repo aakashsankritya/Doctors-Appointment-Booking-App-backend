@@ -1,6 +1,5 @@
 package com.medizine.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -32,7 +30,4 @@ public class Slot extends BaseEntity {
   private boolean isBooked;
 
   private boolean isBookedBySameUser;
-
-  @JsonIgnore
-  private Map<Long, String> userBookingMap;
 }

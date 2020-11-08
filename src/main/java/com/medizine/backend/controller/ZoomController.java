@@ -109,4 +109,21 @@ public class ZoomController {
             return new BaseResponse<>(null, response.getStatusCode().toString());
         }
     }
+
+    @ApiOperation(value = "Get meeting by appointment id", response = ZoomMeeting.class)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "BAD REQUEST"),
+            @ApiResponse(code = 500, message = "SERVER_ERROR")
+    })
+    @GetMapping("/getByAppointmentId")
+    public BaseResponse<ZoomMeeting> patchById(@RequestParam String appointmentId) {
+
+        ResponseEntity<?> response = zoomMeetingService.getByAppointmentId(appointmentId);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return new BaseResponse<>((ZoomMeeting) response.getBody(), response.getStatusCode().toString());
+        } else {
+            return new BaseResponse<>(null, response.getStatusCode().toString());
+        }
+    }
 }

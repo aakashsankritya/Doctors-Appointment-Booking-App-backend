@@ -2,11 +2,13 @@ package com.medizine.backend.repositoryservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.medizine.backend.dto.Appointment;
 import com.medizine.backend.dto.Slot;
-import com.medizine.backend.exchanges.AppointmentSlotResponse;
 import com.medizine.backend.exchanges.SlotBookingRequest;
+import com.medizine.backend.exchanges.SlotResponse;
 import com.medizine.backend.exchanges.SlotStatusRequest;
 import com.medizine.backend.repositories.SlotRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Service
+@Log4j2
 public class SlotRepositoryService {
 
   public static final long MIN_SLOT_DURATION = 900000;
@@ -35,6 +38,9 @@ public class SlotRepositoryService {
 
   @Autowired
   private SlotRepository slotRepository;
+
+  @Autowired
+  private AppointmentRepositoryService appointmentService;
 
   /**
    * Utility method to check for overlapping slots.
@@ -77,7 +83,7 @@ public class SlotRepositoryService {
             .toLocalTime();
   }
 
-  private static LocalDate getLocalDate(Date date) {
+  public static LocalDate getLocalDate(Date date) {
     return date
             .toInstant()
             .atZone(ZoneId.of("UTC"))
@@ -137,27 +143,15 @@ public class SlotRepositoryService {
       return ResponseEntity.badRequest().body("Requested slot not found");
     }
 
-    // Check if booked or not.
-    Map<Long, String> userBookingMap = requestedSlot.getUserBookingMap();
-    if (userBookingMap != null) {
+    Long epochRequestedDate = getLocalDate(slotRequest.getBookingDate()).toEpochDay();
 
-      if (userBookingMap.containsKey(getLocalDate(slotRequest.getBookingDate()).toEpochDay())) {
-        return ResponseEntity.badRequest().body("Already Booked");
-      } else {
-        userBookingMap.put(getLocalDate(slotRequest.getBookingDate()).toEpochDay(),
-                slotRequest.getUserId());
-        // Update the Appointment Details.
-        requestedSlot.setUserBookingMap(userBookingMap);
-        slotRepository.save(requestedSlot);
-      }
-    } else {
-      Map<Long, String> createdUserBookingMap = new HashMap<>();
-      createdUserBookingMap.put(getLocalDate(slotRequest.getBookingDate()).toEpochDay(),
-              slotRequest.getUserId());
-      requestedSlot.setUserBookingMap(createdUserBookingMap);
-      slotRepository.save(requestedSlot);
+    if (appointmentService.alreadyExist(slotRequest, epochRequestedDate)) {
+      return ResponseEntity.badRequest().body("Appointment Already Exist");
     }
-    return ResponseEntity.ok(requestedSlot);
+
+    Appointment savedAppointment = appointmentService.createAppointment(slotRequest);
+
+    return ResponseEntity.ok(savedAppointment);
   }
 
   public Slot getAppointmentSlotById(String doctorId, String slotId) {
@@ -170,7 +164,7 @@ public class SlotRepositoryService {
     return null;
   }
 
-  public AppointmentSlotResponse getSlotByDocIdAndDate(SlotStatusRequest slotStatusRequest) {
+  public SlotResponse getLiveSlotStatus(SlotStatusRequest slotStatusRequest) {
 
     String doctorId = slotStatusRequest.getDoctorId();
     String userId = slotStatusRequest.getUserId();
@@ -181,19 +175,33 @@ public class SlotRepositoryService {
     Long epochValueOfCurrDate = getLocalDate(currentDate).toEpochDay();
 
     List<Slot> slotList = slotRepository.getAllByDoctorId(doctorId);
+
     if (slotList == null || slotList.size() == 0) {
-      return new AppointmentSlotResponse(null, "No slots found");
+      return new SlotResponse(null, "No slots found");
     } else {
       for (Slot currentSlot : slotList) {
-        if (currentSlot.getUserBookingMap() != null &&
-                currentSlot.getUserBookingMap().containsKey(epochValueOfCurrDate)) {
-          currentSlot.setBooked(true);
-          currentSlot.setBookedBySameUser(currentSlot.getUserBookingMap().containsValue(userId));
-        } else {
-          currentSlot.setBooked(false);
+        List<Appointment> savedAppointment = appointmentService.findAppointmentBySlot(currentSlot, userId);
+        if (savedAppointment != null) {
+          for (Appointment appointment : savedAppointment) {
+            Long epochBookedDate = getLocalDate(appointment.getAppointmentDate()).toEpochDay();
+            if (epochBookedDate.equals(epochValueOfCurrDate)) {
+              currentSlot.setBookedBySameUser(true);
+              break;
+            }
+          }
+        }
+        List<Appointment> savedByOther = appointmentService.findBookedAppointment(currentSlot);
+        if (savedByOther != null) {
+          for (Appointment appointment : savedByOther) {
+            Long epochBookedDate = getLocalDate(appointment.getAppointmentDate()).toEpochDay();
+            if (epochBookedDate.equals(epochValueOfCurrDate)) {
+              currentSlot.setBooked(true);
+              break;
+            }
+          }
         }
       }
-      return new AppointmentSlotResponse(slotList, "Fetched");
+      return new SlotResponse(slotList, "Fetched");
     }
   }
 }
