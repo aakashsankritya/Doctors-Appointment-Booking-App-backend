@@ -104,9 +104,26 @@ public class SlotController {
     ResponseEntity<?> response = slotService.bookSlot(slotRequest);
     if (response.getStatusCode().is2xxSuccessful()) {
       return new BaseResponse<>((Appointment) response.getBody(),
-              response.getStatusCode().toString());
+          response.getStatusCode().toString());
     } else {
       return new BaseResponse<>(null, response.getStatusCode().toString());
+    }
+  }
+
+  @ApiOperation(value = "Delete Slot by id", response = SlotResponse.class)
+  @ApiResponses({
+      @ApiResponse(code = 200, message = "OK"),
+      @ApiResponse(code = 400, message = "Bad Request"),
+      @ApiResponse(code = 500, message = "Server Error")
+  })
+  @DeleteMapping("/deleteById")
+  public BaseResponse<Slot> deleteSlotById(@RequestParam String slotId) {
+
+    Slot deletedSlot = slotService.deleteSlotById(slotId);
+    if (deletedSlot == null) {
+      return new BaseResponse<>(null, "Bad Request");
+    } else {
+      return new BaseResponse<>(deletedSlot, "OK");
     }
   }
 }
