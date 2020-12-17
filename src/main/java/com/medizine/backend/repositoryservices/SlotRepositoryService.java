@@ -204,4 +204,17 @@ public class SlotRepositoryService {
       return new SlotResponse(slotList, "Fetched");
     }
   }
+
+  public Slot deleteSlotById(String slotId) {
+    Slot deletedSlot;
+
+    if (slotRepository.findById(slotId).isPresent()) {
+      deletedSlot = slotRepository.findById(slotId).get();
+    } else {
+      return null;
+    }
+
+    slotRepository.delete(deletedSlot);
+    return deletedSlot;
+  }
 }
