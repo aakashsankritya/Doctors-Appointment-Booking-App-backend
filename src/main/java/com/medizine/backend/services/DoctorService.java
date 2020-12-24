@@ -1,12 +1,12 @@
 package com.medizine.backend.services;
 
 import com.medizine.backend.dto.Doctor;
-import com.medizine.backend.exchanges.BaseResponse;
+import com.medizine.backend.exchanges.DoctorListResponse;
 import com.medizine.backend.exchanges.DoctorPatchRequest;
-import com.medizine.backend.exchanges.GetUserResponse;
 import com.medizine.backend.repositoryservices.DoctorRepositoryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,36 +18,41 @@ public class DoctorService implements BaseService {
   @Autowired
   private DoctorRepositoryService doctorRepositoryService;
 
-  public BaseResponse<?> createDoctor(Doctor doctor) {
+  public ResponseEntity<?> createDoctor(Doctor doctor) {
     return doctorRepositoryService.createDoctor(doctor);
   }
 
-  public BaseResponse<?> patchDoctor(String id, DoctorPatchRequest patchRequest) {
+  public ResponseEntity<?> patchDoctor(String id, DoctorPatchRequest patchRequest) {
     return doctorRepositoryService.patchDoctor(id, patchRequest);
   }
 
-  public BaseResponse<?> updateDoctorById(String id, Doctor doctorToUpdate) {
+  public ResponseEntity<?> updateDoctorById(String id, Doctor doctorToUpdate) {
     return doctorRepositoryService.updateDoctorById(id, doctorToUpdate);
   }
 
   @Override
-  public GetUserResponse getAvailableDoctors() {
+  public DoctorListResponse getAvailableDoctors() {
     List<Doctor> doctorList = doctorRepositoryService.getAllDoctorsCloseBy();
-    return new GetUserResponse(doctorList);
+    return new DoctorListResponse(doctorList, "");
   }
 
   @Override
-  public BaseResponse<?> findEntityById(String id) {
+  public ResponseEntity<?> findEntityById(String id) {
     return doctorRepositoryService.getDoctorById(id);
   }
 
   @Override
-  public BaseResponse<?> deleteEntity(String id) {
+  public ResponseEntity<?> deleteEntity(String id) {
     return doctorRepositoryService.deleteDoctorById(id);
   }
 
   @Override
-  public BaseResponse<?> restoreEntity(String id) {
+  public ResponseEntity<?> restoreEntity(String id) {
     return doctorRepositoryService.restoreDoctorById(id);
+  }
+
+  @Override
+  public ResponseEntity<?> findEntityByPhone(String countryCode, String phoneNumber) {
+    return doctorRepositoryService.getDoctorByPhone(countryCode, phoneNumber);
   }
 }

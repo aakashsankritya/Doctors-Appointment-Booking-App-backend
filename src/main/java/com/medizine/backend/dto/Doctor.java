@@ -3,7 +3,9 @@ package com.medizine.backend.dto;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class Doctor extends BaseEntity {
 
-  @NotNull
   @Size(max = 100)
   private String name;
 
@@ -28,16 +29,12 @@ public class Doctor extends BaseEntity {
   @Pattern(regexp = "\\S+@\\S+\\.\\S+")
   private String emailAddress;
 
-  @NotNull
   private LocalDate dob;
 
   private String gender;
 
-  @NotNull
   private String speciality;
 
-  @Min(0)
-  @Max(20)
   private int experience;
 
   private String about;

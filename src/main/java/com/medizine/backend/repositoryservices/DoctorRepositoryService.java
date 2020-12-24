@@ -1,24 +1,27 @@
 package com.medizine.backend.repositoryservices;
 
 import com.medizine.backend.dto.Doctor;
-import com.medizine.backend.exchanges.BaseResponse;
 import com.medizine.backend.exchanges.DoctorPatchRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface DoctorRepositoryService {
 
-  BaseResponse<Doctor> createDoctor(Doctor doctorToSave);
+    ResponseEntity<?> createDoctor(Doctor doctorToSave);
 
-  BaseResponse<?> updateDoctorById(String id, Doctor doctorToUpdate);
+    ResponseEntity<?> updateDoctorById(String id, Doctor doctorToUpdate);
 
-  BaseResponse<?> patchDoctor(String id, DoctorPatchRequest doctorPatchRequest);
+    ResponseEntity<?> patchDoctor(String id, DoctorPatchRequest doctorPatchRequest);
 
   List<Doctor> getAllDoctorsCloseBy();
 
-  BaseResponse<?> getDoctorById(String id);
+    ResponseEntity<?> getDoctorById(String id);
 
-  BaseResponse<?> deleteDoctorById(String id);
+    ResponseEntity<?> deleteDoctorById(String id);
 
-  BaseResponse<?> restoreDoctorById(String id);
+    ResponseEntity<?> restoreDoctorById(String id);
+
+    ResponseEntity<?> getDoctorByPhone(String countryCode, String phoneNumber);
+
 }

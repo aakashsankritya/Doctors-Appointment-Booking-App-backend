@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +16,7 @@ import java.util.Map;
 @Document(collection = "slots")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
-public class AppointmentSlot extends BaseEntity {
+public class Slot extends BaseEntity {
 
   @NotNull
   private Date startTime; // 24hr format.
@@ -28,7 +27,7 @@ public class AppointmentSlot extends BaseEntity {
   @NotNull
   private String doctorId;
 
-  private String isBooked;
+  private boolean isBooked;
 
-  private Map<Long, String> userBookingMap;
+  private boolean isBookedBySameUser;
 }
