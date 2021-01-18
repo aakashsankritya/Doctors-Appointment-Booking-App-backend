@@ -73,26 +73,6 @@ public class ZoomController {
         }
     }
 
-//    @ApiOperation(value = "create a zoom meeting if not exists", response = ZoomMeetingResponse.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "OK"),
-//            @ApiResponse(code = 400, message = "VALIDATION_ERROR"),
-//            @ApiResponse(code = 500, message = "SERVER_ERROR")
-//    })
-//    @PatchMapping()
-//    public CompletableFuture<Result> createZoomMeetingIfNotExists() {
-//        String id = this.service.createZoomMeetingIfNotExists(zoomMeetingRequest);
-//
-//            }
-//            catch (Exception ex) {
-//                LOGGER.error(ex.getMessage(), ex);
-//                responseBuilder.error(Utility.getErrorMessage(ex));
-//                return badRequest(responseBuilder.build().toJson());
-//            }
-//        }, ec.current());
-//    }
-
-
     @ApiOperation(value = "patch meeting by id", response = ZoomMeeting.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
