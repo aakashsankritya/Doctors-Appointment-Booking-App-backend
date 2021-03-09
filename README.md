@@ -4,8 +4,19 @@
 
 JAVA, Spring Boot, Gradle, Swagger Documentation, MongoDB,  AWS Elastic Beanstalk
 
-## **Features**
+## Local installation
+- Clone the repo.
+- Change the directory
+- Update the file `src/main/resources/application.properties`.
+	- There you need to declare your database configurations and since the backend is using MongoDB as its database.
+	- Try to use mongo's configuration (either local or MongoDB Atlas).
+	- Also update property `file.upload-dir` in the same file pointing to some local directory, **it should not be null**.
 
+- Run the command `gralde bootrun`
+- Server would be up at http://localhost:8081/
+- API documentation can be viewed at http://localhost:8081/swagger-ui/index.html
+
+## **Features**
 
 **Types of User:**
 
@@ -92,7 +103,7 @@ JAVA, Spring Boot, Gradle, Swagger Documentation, MongoDB,  AWS Elastic Beanstal
 
 	The option of viewing the patients’ medical history
 
-### Notifications
+### Notifications (expected in future)
 
 	Alert doctors about their appointment a few minutes before it gets started
 	Also, notify doctors when a patient requests for an appointment
